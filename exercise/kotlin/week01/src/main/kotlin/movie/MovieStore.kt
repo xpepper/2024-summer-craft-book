@@ -64,11 +64,7 @@ class MovieStore {
     }
 
     fun returnMovie(id: String) {
-        val movie = movies[id]
-        if (movie == null) {
-            println("Invalid movie ID!")
-            return
-        }
+        val movie = getMovie(id) ?: return
 
         if (movie.borrowedCopies <= 0) {
             println("Error: No copies were borrowed.")
