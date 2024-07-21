@@ -7,7 +7,7 @@ class MovieStore {
     private val movies: HashMap<String, Movie> = HashMap()
     private val sales: StoreAccount = StoreAccount()
 
-    val allMovies get() = HashMap(movies)
+    val allMovies get(): Map<String, Movie> = HashMap(movies)
 
     fun buyMovie(customer: String, id: String) { // customer could be a value object (smell: primitive obsession)
         val movie = movies[id]
