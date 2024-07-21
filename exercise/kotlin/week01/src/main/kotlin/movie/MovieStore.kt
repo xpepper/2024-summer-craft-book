@@ -1,96 +1,99 @@
 package movie
 
 class MovieStore {
-    var allMovies: HashMap<String, Movie> = HashMap()
-    var sales: StoreAccount = StoreAccount()
+    private val movies: HashMap<String, Movie> = HashMap()
+    private val sales: StoreAccount = StoreAccount()
 
-    fun buyMovie(customer: String, id: String) {
-        val movie = allMovies[id]
-        if (movie != null) {
-            if (movie.totalCopies - movie.borrowedCopies > 0) {
-                movie.totalCopies--
-                if (movie.canSell()) {
-                    sales.sell(movie, customer)
-                } else {
-                    println("Movie not for sale")
-                }
-            } else {
-                println("All copies are currently borrowed.")
-            }
-        } else {
+    val allMovies get() = HashMap(movies)
+
+    fun buyMovie(customer: String, id: String) { // customer could be a value object (smell: primitive obsession)
+        val movie = movies[id]
+        if (movie == null) {
             println("Movie not available!")
+            return
         }
+
+        if (movie.totalCopies - movie.borrowedCopies <= 0) {
+            println("All copies are currently borrowed.")
+            return
+        }
+        if (!movie.canSell()) {
+            println("Movie not for sale")
+            return
+        }
+
+        movie.totalCopies--
+        sales.sell(movie, customer)
     }
 
     fun addMovie(id: String, title: String, director: String, totalCopies: Int, unitPrice: Double) {
-        if (allMovies.containsKey(id)) {
+        if (movies.containsKey(id)) {
             println("Movie already exists! Updating total copies.")
             updateMovieCopies(id, totalCopies)
         } else {
-            allMovies[id] = Movie(id, title, director, totalCopies, unitPrice)
+            movies[id] = Movie(id, title, director, totalCopies, unitPrice)
         }
     }
 
-    fun updateMovieCopies(id: String, newTotalCopies: Int) {
-        val movie = allMovies[id]
-        if (movie != null) {
-            if (newTotalCopies < movie.borrowedCopies) {
-                println("Cannot reduce total copies below borrowed copies.")
-            } else {
-                movie.totalCopies = newTotalCopies
-            }
-        } else {
+    private fun updateMovieCopies(id: String, newTotalCopies: Int) {
+        val movie = movies[id]
+        if (movie == null) {
             println("Movie not found!")
+            return
+        }
+
+        if (newTotalCopies < movie.borrowedCopies) {
+            println("Cannot reduce total copies below borrowed copies.")
+        } else {
+            movie.totalCopies = newTotalCopies
         }
     }
 
     fun removeMovie(id: String) {
-        if (allMovies.containsKey(id)) {
-            allMovies.remove(id)
-        } else {
+        if (!movies.containsKey(id)) {
             println("Movie not found!")
+            return
         }
+
+        movies.remove(id)
     }
 
     fun borrowMovie(id: String) {
-        val movie = allMovies[id]
-        if (movie != null) {
-            if (movie.totalCopies - movie.borrowedCopies > 0) {
-                movie.borrowedCopies++
-            } else {
-                println("All copies are currently borrowed.")
-            }
-        } else {
+        val movie = movies[id]
+        if (movie == null) {
             println("Movie not available!")
+            return
         }
+
+        if (movie.totalCopies - movie.borrowedCopies <= 0) {
+            println("All copies are currently borrowed.")
+            return
+        }
+
+        movie.borrowedCopies++
     }
 
     fun returnMovie(id: String) {
-        val movie = allMovies[id]
-        if (movie != null) {
-            if (movie.borrowedCopies > 0) {
-                movie.borrowedCopies--
-            } else {
-                println("Error: No copies were borrowed.")
-            }
-        } else {
+        val movie = movies[id]
+        if (movie == null) {
             println("Invalid movie ID!")
+            return
         }
+
+        if (movie.borrowedCopies <= 0) {
+            println("Error: No copies were borrowed.")
+            return
+        }
+
+        movie.borrowedCopies--
     }
 
     fun displayMovies() {
-        for ((_, m) in allMovies) {
+        for ((_, m) in movies) {
             println("ID: ${m.movieID}, Title: ${m.title}, Director: ${m.director}, Available Copies: ${m.totalCopies - m.borrowedCopies}")
         }
     }
 
-    fun findMoviesByTitle(title: String): List<Movie> {
-        val result = mutableListOf<Movie>()
-        for ((_, m) in allMovies) {
-            if (m.title.equals(title, ignoreCase = true)) {
-                result.add(m)
-            }
-        }
-        return result
-    }
+    fun findMoviesByTitle(title: String): List<Movie> =
+        movies.values.filter { it.title.equals(title, ignoreCase = true) }.toList()
 }

@@ -13,6 +13,15 @@ class MovieStoreTest : StringSpec({
         store.addMovie("003", "Dunkirk", "Christopher Nolan", 5, 0.0)
     }
 
+    "testWhenCannotBuyMovieItsTotalCopiesShouldNotChange" {
+        store.addMovie("004", "Any title", "anything", 1, 0.0)
+        store.allMovies["004"]?.totalCopies shouldBe 1
+
+        store.buyMovie("any customer", "004")
+
+        store.allMovies["004"]?.totalCopies shouldBe 1
+    }
+
     "testAddMovie" {
         store.addMovie("002", "The Matrix", "Lana Wachowski, Lilly Wachowski", 8, 0.0)
         store.allMovies["002"]?.totalCopies shouldBe 8
