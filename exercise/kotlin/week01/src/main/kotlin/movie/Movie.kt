@@ -1,11 +1,11 @@
 package movie
 
 class Movie(
-    var movieID: String,
-    var title: String,
-    var director: String,
+    val movieID: String,
+    val title: String,
+    val director: String,
     var totalCopies: Int,
-    var unitPrice: Double
+    val unitPrice: Double
 ) {
     var borrowedCopies: Int = 0
 

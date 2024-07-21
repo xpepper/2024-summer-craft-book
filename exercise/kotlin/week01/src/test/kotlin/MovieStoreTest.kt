@@ -38,11 +38,11 @@ class MovieStoreTest : StringSpec({
     }
 
     "testBuyMovie" {
-        val movie = store.allMovies["001"]
-        movie?.unitPrice = 5.0
+        store.addMovie("005", "Any title", "anything", 2, 10.0)
 
-        store.buyMovie("Durant", "001")
-        store.allMovies["001"]?.totalCopies shouldBe 9
+        store.buyMovie("any customer", "005")
+
+        store.allMovies["005"]?.totalCopies shouldBe 1
     }
 
     "testReturnMovie" {
