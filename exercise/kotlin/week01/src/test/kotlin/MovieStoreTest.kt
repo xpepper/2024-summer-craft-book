@@ -43,6 +43,10 @@ class MovieStoreTest : StringSpec({
         store.allMovies[movie.movieId.value] shouldBe null
     }
 
+    "cannot removes an unknown movie" {
+        store.removeMovie(anyMovieId().value)
+    }
+
     "borrows a movie" {
         val movie = anyMovie()
         store.addMovie(movie)

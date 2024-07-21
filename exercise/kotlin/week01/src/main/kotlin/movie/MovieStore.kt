@@ -1,6 +1,5 @@
 package movie
 
-import movie.Movie.MovieId
 import movie.Movie.MovieTitle
 
 class MovieStore {
@@ -9,12 +8,10 @@ class MovieStore {
 
     val allMovies get(): Map<String, Movie> = HashMap(movies)
 
+    private fun getMovie(id: String): Movie? = movies[id] ?: run { println("Movie not found!"); null }
+
     fun buyMovie(customer: String, id: String) { // customer could be a value object (smell: primitive obsession)
-        val movie = movies[id]
-        if (movie == null) {
-            println("Movie not available!")
-            return
-        }
+        val movie = getMovie(id) ?: return
 
         if (movie.totalCopies - movie.borrowedCopies <= 0) {
             println("All copies are currently borrowed.")
@@ -40,11 +37,7 @@ class MovieStore {
     }
 
     private fun updateMovieCopies(id: String, newTotalCopies: Int) {
-        val movie = movies[id]
-        if (movie == null) {
-            println("Movie not found!")
-            return
-        }
+        val movie = getMovie(id) ?: return
 
         if (newTotalCopies < movie.borrowedCopies) {
             println("Cannot reduce total copies below borrowed copies.")
@@ -54,20 +47,13 @@ class MovieStore {
     }
 
     fun removeMovie(id: String) {
-        if (!movies.containsKey(id)) {
-            println("Movie not found!")
-            return
+        getMovie(id)?.let {
+            movies.remove(it.movieId.value)
         }
-
-        movies.remove(id)
     }
 
     fun borrowMovie(id: String) {
-        val movie = movies[id]
-        if (movie == null) {
-            println("Movie not available!")
-            return
-        }
+        val movie = getMovie(id) ?: return
 
         if (movie.totalCopies - movie.borrowedCopies <= 0) {
             println("All copies are currently borrowed.")
