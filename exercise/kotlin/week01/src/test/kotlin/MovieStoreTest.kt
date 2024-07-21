@@ -15,7 +15,7 @@ class MovieStoreTest : StringSpec({
         store.allMovies.forEach { store.removeMovie(it.key) }
     }
 
-    "testWhenCannotBuyMovieItsTotalCopiesShouldNotChange" {
+    "a free movie cannot be bought" {
         val freeMovie = Movie(anyMovieId(), MovieTitle(randomString()).value, randomString(), 1, 0.0)
 
         store.addMovie(freeMovie)
@@ -26,7 +26,7 @@ class MovieStoreTest : StringSpec({
         store.allMovies[freeMovie.movieId.value]?.totalCopies shouldBe 1
     }
 
-    "testAddMovie" {
+    "adds a movie" {
         val movie = anyMovie()
 
         store.addMovie(movie)
@@ -34,7 +34,7 @@ class MovieStoreTest : StringSpec({
         store.allMovies[movie.movieId.value] shouldBe movie
     }
 
-    "testRemoveMovie" {
+    "removes a movie" {
         val movie = anyMovie()
         store.addMovie(movie)
 
@@ -43,7 +43,7 @@ class MovieStoreTest : StringSpec({
         store.allMovies[movie.movieId.value] shouldBe null
     }
 
-    "testBorrowMovie" {
+    "borrows a movie" {
         val movie = anyMovie()
         store.addMovie(movie)
 
@@ -52,7 +52,7 @@ class MovieStoreTest : StringSpec({
         store.allMovies[movie.movieId.value]?.borrowedCopies shouldBe 1
     }
 
-    "testBuyMovie" {
+    "buys a movie" {
         val movie = anyMovie(totalCopies = 2)
         store.addMovie(movie)
 
@@ -61,7 +61,7 @@ class MovieStoreTest : StringSpec({
         store.allMovies[movie.movieId.value]?.totalCopies shouldBe 1
     }
 
-    "testReturnMovie" {
+    "returns a movie" {
         val movie = anyMovie()
         store.addMovie(movie)
 
@@ -69,7 +69,7 @@ class MovieStoreTest : StringSpec({
         store.allMovies[movie.movieId.value]?.borrowedCopies shouldBe 0
     }
 
-    "testFindMoviesByTitle" {
+    "finds movies by title" {
         val title = MovieTitle("Inception")
         store.addMovie(Movie(anyMovieId(), title.value, "Christopher Nolan", 10, 1.0))
 
