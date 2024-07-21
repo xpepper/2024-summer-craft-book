@@ -29,12 +29,13 @@ class MovieStore {
         sales.sell(movie, customer)
     }
 
-    fun addMovie(id: MovieId, title: MovieTitle, director: String, totalCopies: Int, unitPrice: Double) {
-        if (movies.containsKey(id.value)) {
+    fun addMovie(movie: Movie) {
+        if (movies.containsKey(movie.movieId.value)) {
             println("Movie already exists! Updating total copies.")
-            updateMovieCopies(id.value, totalCopies)
+            updateMovieCopies(movie.movieId.value, movie.totalCopies)
         } else {
-            movies[id.value] = Movie(id.value, title.value, director, totalCopies, unitPrice)
+            movies[movie.movieId.value] =
+                Movie(movie.movieId, MovieTitle(movie.title).value, movie.director, movie.totalCopies, movie.unitPrice)
         }
     }
 
@@ -93,7 +94,7 @@ class MovieStore {
 
     fun displayMovies() {
         for ((_, m) in movies) {
-            println("ID: ${m.movieID}, Title: ${m.title}, Director: ${m.director}, Available Copies: ${m.totalCopies - m.borrowedCopies}")
+            println("ID: ${m.movieId}, Title: ${m.title}, Director: ${m.director}, Available Copies: ${m.totalCopies - m.borrowedCopies}")
         }
     }
 

@@ -1,7 +1,7 @@
 package movie
 
-class Movie(
-    val movieID: String,
+data class Movie(
+    val movieId: MovieId,
     val title: String,
     val director: String,
     var totalCopies: Int,
