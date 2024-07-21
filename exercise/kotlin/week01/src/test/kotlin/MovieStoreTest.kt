@@ -5,15 +5,16 @@ import movie.Movie.MovieId
 import movie.Movie.MovieTitle
 import movie.MovieStore
 
+private val id = anyMovieId()
+
 class MovieStoreTest : StringSpec({
-    lateinit var store: MovieStore
+    val store = MovieStore()
 
     beforeTest {
-        store = MovieStore()
+        store.allMovies.forEach { store.removeMovie(it.key) }
     }
 
     "testWhenCannotBuyMovieItsTotalCopiesShouldNotChange" {
-        val id = anyMovieId()
         store.addMovie(id, MovieTitle("Any title"), "anything", 1, 0.0)
         store.allMovies[id.value]?.totalCopies shouldBe 1
 
@@ -23,13 +24,11 @@ class MovieStoreTest : StringSpec({
     }
 
     "testAddMovie" {
-        val id = anyMovieId()
         store.addMovie(id, MovieTitle("The Matrix"), "Lana Wachowski, Lilly Wachowski", 8, 0.0)
         store.allMovies[id.value]?.totalCopies shouldBe 8
     }
 
     "testRemoveMovie" {
-        val id = anyMovieId()
         store.addMovie(id, MovieTitle("Inception"), "Christopher Nolan", 10, 1.0)
 
         store.removeMovie(id.value)
@@ -37,7 +36,6 @@ class MovieStoreTest : StringSpec({
     }
 
     "testBorrowMovie" {
-        val id = anyMovieId()
         store.addMovie(id, MovieTitle("Inception"), "Christopher Nolan", 10, 1.0)
 
         store.borrowMovie(id.value)
@@ -45,7 +43,6 @@ class MovieStoreTest : StringSpec({
     }
 
     "testBuyMovie" {
-        val id = anyMovieId()
         store.addMovie(id, MovieTitle("Any title"), "anything", 2, 10.0)
 
         store.buyMovie("any customer", id.value)
@@ -54,7 +51,6 @@ class MovieStoreTest : StringSpec({
     }
 
     "testReturnMovie" {
-        val id = anyMovieId()
         store.addMovie(id, MovieTitle("Inception"), "Christopher Nolan", 10, 1.0)
 
         store.returnMovie(id.value)
