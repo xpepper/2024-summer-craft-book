@@ -35,32 +35,38 @@ class MovieStoreTest : StringSpec({
     }
 
     "testRemoveMovie" {
-        store.addMovie(Movie(id, MovieTitle("Inception").value, "Christopher Nolan", 10, 1.0))
+        val movie = anyMovie()
+        store.addMovie(movie)
 
-        store.removeMovie(id.value)
-        store.allMovies[id.value] shouldBe null
+        store.removeMovie(movie.movieId.value)
+
+        store.allMovies[movie.movieId.value] shouldBe null
     }
 
     "testBorrowMovie" {
-        store.addMovie(Movie(id, MovieTitle("Inception").value, "Christopher Nolan", 10, 1.0))
+        val movie = anyMovie()
+        store.addMovie(movie)
 
-        store.borrowMovie(id.value)
-        store.allMovies[id.value]?.borrowedCopies shouldBe 1
+        store.borrowMovie(movie.movieId.value)
+
+        store.allMovies[movie.movieId.value]?.borrowedCopies shouldBe 1
     }
 
     "testBuyMovie" {
-        store.addMovie(Movie(id, MovieTitle("Any title").value, "anything", 2, 10.0))
+        val movie = anyMovie(totalCopies = 2)
+        store.addMovie(movie)
 
-        store.buyMovie("any customer", id.value)
+        store.buyMovie("any customer", movie.movieId.value)
 
-        store.allMovies[id.value]?.totalCopies shouldBe 1
+        store.allMovies[movie.movieId.value]?.totalCopies shouldBe 1
     }
 
     "testReturnMovie" {
-        store.addMovie(Movie(id, MovieTitle("Inception").value, "Christopher Nolan", 10, 1.0))
+        val movie = anyMovie()
+        store.addMovie(movie)
 
-        store.returnMovie(id.value)
-        store.allMovies[id.value]?.borrowedCopies shouldBe 0
+        store.returnMovie(movie.movieId.value)
+        store.allMovies[movie.movieId.value]?.borrowedCopies shouldBe 0
     }
 
     "testFindMoviesByTitle" {
@@ -74,7 +80,14 @@ class MovieStoreTest : StringSpec({
     }
 })
 
-private fun anyMovie() = Movie(anyMovieId(), MovieTitle(randomString()).value, randomString(), 1, 10.0)
+private fun anyMovie(totalCopies: Int = 1) =
+    Movie(
+        movieId = anyMovieId(),
+        title = MovieTitle(randomString()).value,
+        director = randomString(),
+        totalCopies = totalCopies,
+        unitPrice = 10.0
+    )
 
 private fun anyMovieId() = MovieId(randomString())
 
