@@ -8,10 +8,8 @@ class MovieStore {
 
     val allMovies get(): Map<String, Movie> = HashMap(movies)
 
-    private fun getMovie(id: String): Movie? = movies[id] ?: run { println("Movie not found!"); null }
-
     fun buyMovie(customer: String, id: String) { // customer could be a value object (smell: primitive obsession)
-        val movie = getMovie(id) ?: return
+        val movie = findMovieById(id) ?: return
 
         if (movie.totalCopies - movie.borrowedCopies <= 0) {
             println("All copies are currently borrowed.")
@@ -37,7 +35,7 @@ class MovieStore {
     }
 
     private fun updateMovieCopies(id: String, newTotalCopies: Int) {
-        val movie = getMovie(id) ?: return
+        val movie = findMovieById(id) ?: return
 
         if (newTotalCopies < movie.borrowedCopies) {
             println("Cannot reduce total copies below borrowed copies.")
@@ -47,13 +45,13 @@ class MovieStore {
     }
 
     fun removeMovie(id: String) {
-        getMovie(id)?.let {
+        findMovieById(id)?.let {
             movies.remove(it.movieId.value)
         }
     }
 
     fun borrowMovie(id: String) {
-        val movie = getMovie(id) ?: return
+        val movie = findMovieById(id) ?: return
 
         if (movie.totalCopies - movie.borrowedCopies <= 0) {
             println("All copies are currently borrowed.")
@@ -64,7 +62,7 @@ class MovieStore {
     }
 
     fun returnMovie(id: String) {
-        val movie = getMovie(id) ?: return
+        val movie = findMovieById(id) ?: return
 
         if (movie.borrowedCopies <= 0) {
             println("Error: No copies were borrowed.")
@@ -82,4 +80,6 @@ class MovieStore {
 
     fun findMoviesByTitle(title: String): List<Movie> =
         movies.values.filter { it.title.equals(title, ignoreCase = true) }.toList()
+
+    private fun findMovieById(id: String): Movie? = movies[id] ?: run { println("Movie not found!"); null }
 }
