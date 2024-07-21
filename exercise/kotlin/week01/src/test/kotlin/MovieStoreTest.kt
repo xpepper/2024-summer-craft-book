@@ -1,6 +1,9 @@
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
+import movie.Movie
+import movie.Movie.MovieId
+import movie.Movie.MovieTitle
 import movie.MovieStore
 
 class MovieStoreTest : StringSpec({
@@ -8,13 +11,13 @@ class MovieStoreTest : StringSpec({
 
     beforeTest {
         store = MovieStore()
-        store.addMovie("001", "Inception", "Christopher Nolan", 10, 0.0)
-        store.addMovie("002", "The Matrix", "Lana Wachowski, Lilly Wachowski", 8, 0.0)
-        store.addMovie("003", "Dunkirk", "Christopher Nolan", 5, 0.0)
+        store.addMovie(MovieId("001"), MovieTitle("Inception"), "Christopher Nolan", 10, 0.0)
+        store.addMovie(MovieId("002"), MovieTitle("The Matrix"), "Lana Wachowski, Lilly Wachowski", 8, 0.0)
+        store.addMovie(MovieId("003"), MovieTitle("Dunkirk"), "Christopher Nolan", 5, 0.0)
     }
 
     "testWhenCannotBuyMovieItsTotalCopiesShouldNotChange" {
-        store.addMovie("004", "Any title", "anything", 1, 0.0)
+        store.addMovie(MovieId("004"), MovieTitle("Any title"), "anything", 1, 0.0)
         store.allMovies["004"]?.totalCopies shouldBe 1
 
         store.buyMovie("any customer", "004")
@@ -23,7 +26,7 @@ class MovieStoreTest : StringSpec({
     }
 
     "testAddMovie" {
-        store.addMovie("002", "The Matrix", "Lana Wachowski, Lilly Wachowski", 8, 0.0)
+        store.addMovie(MovieId("002"), MovieTitle("The Matrix"), "Lana Wachowski, Lilly Wachowski", 8, 0.0)
         store.allMovies["002"]?.totalCopies shouldBe 8
     }
 
@@ -38,7 +41,7 @@ class MovieStoreTest : StringSpec({
     }
 
     "testBuyMovie" {
-        store.addMovie("005", "Any title", "anything", 2, 10.0)
+        store.addMovie(MovieId("005"), MovieTitle("Any title"), "anything", 2, 10.0)
 
         store.buyMovie("any customer", "005")
 

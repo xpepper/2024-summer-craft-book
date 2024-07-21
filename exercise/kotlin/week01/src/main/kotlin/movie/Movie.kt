@@ -12,4 +12,8 @@ class Movie(
     fun canSell(): Boolean {
         return unitPrice != 0.0
     }
+
+    data class MovieId(val value: String)
+    data class MovieTitle(val value: String)
 }
+

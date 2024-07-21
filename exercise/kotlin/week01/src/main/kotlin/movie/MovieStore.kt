@@ -1,5 +1,8 @@
 package movie
 
+import movie.Movie.MovieId
+import movie.Movie.MovieTitle
+
 class MovieStore {
     private val movies: HashMap<String, Movie> = HashMap()
     private val sales: StoreAccount = StoreAccount()
@@ -26,12 +29,12 @@ class MovieStore {
         sales.sell(movie, customer)
     }
 
-    fun addMovie(id: String, title: String, director: String, totalCopies: Int, unitPrice: Double) {
-        if (movies.containsKey(id)) {
+    fun addMovie(id: MovieId, title: MovieTitle, director: String, totalCopies: Int, unitPrice: Double) {
+        if (movies.containsKey(id.value)) {
             println("Movie already exists! Updating total copies.")
-            updateMovieCopies(id, totalCopies)
+            updateMovieCopies(id.value, totalCopies)
         } else {
-            movies[id] = Movie(id, title, director, totalCopies, unitPrice)
+            movies[id.value] = Movie(id.value, title.value, director, totalCopies, unitPrice)
         }
     }
 
