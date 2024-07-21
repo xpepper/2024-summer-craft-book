@@ -12,7 +12,7 @@ class MovieStoreTest : StringSpec({
     val store = MovieStore()
 
     beforeTest {
-        store.allMovies.forEach { store.removeMovie(it.key) }
+        store.empty()
     }
 
     "a free movie cannot be bought" {
@@ -79,6 +79,10 @@ class MovieStoreTest : StringSpec({
         movies[0].title shouldBe "Inception"
     }
 })
+
+private fun MovieStore.empty() {
+    allMovies.forEach { removeMovie(it.key) }
+}
 
 private fun anyMovie(totalCopies: Int = 1) =
     Movie(
