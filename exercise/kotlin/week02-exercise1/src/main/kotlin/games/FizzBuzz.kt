@@ -7,12 +7,14 @@ object FizzBuzz {
         }
 
         return when {
-            input % 3 == 0 && input % 5 == 0 -> "FizzBuzz"
-            input % 3 == 0 -> "Fizz"
-            input % 5 == 0 -> "Buzz"
+            input.divisibleBy(5*3) -> "FizzBuzz"
+            input.divisibleBy(3) -> "Fizz"
+            input.divisibleBy(5) -> "Buzz"
 
             else -> input.toString()
         }
     }
+
+    private fun Int.divisibleBy(number: Int) = this % number == 0
 }
 
